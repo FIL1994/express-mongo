@@ -53,6 +53,17 @@ app.get("/users", (req, res, next) => {
   });
 });
 
+app.get("/users/:id", (req, res, next) => {
+  User.findById(req.params.id, (err, doc) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.send(doc);
+  });
+});
+
 app.delete("/users/:id", jwtCheck, (req, res, next) => {
   res.status(HttpStatus.NOT_IMPLEMENTED).send({
     error: HttpStatus.getStatusText(HttpStatus.NOT_IMPLEMENTED)
