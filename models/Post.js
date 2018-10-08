@@ -4,11 +4,13 @@ const { Schema } = mongoose;
 const postSchema = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 70
   },
   content: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 300
   },
   author: { type: Schema.Types.ObjectId, ref: "User" }
 });
