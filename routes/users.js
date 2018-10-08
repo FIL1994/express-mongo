@@ -8,14 +8,17 @@ const { User } = require("../models/User");
 const router = express.Router();
 
 router.get("/", jwtCheck, (req, res, next) => {
-  User.find((err, doc) => {
-    if (err) {
-      next(err);
-      return;
-    }
+  User.find()
+    .select("username")
+    .lean({ virtuals: false })
+    .exec((err, doc) => {
+      if (err) {
+        next(err);
+        return;
+      }
 
-    res.send(doc);
-  });
+      res.send(doc);
+    });
 });
 
 router.get("/:id", (req, res, next) => {
