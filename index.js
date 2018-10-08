@@ -106,6 +106,7 @@ app.post("/posts", jwtCheck, async (req, res, next) => {
 
 app.post("/signup", async (req, res, next) => {
   const userData = req.body;
+  userData.isAdmin = false;
 
   const user = await User.create(userData).catch(e => e);
 

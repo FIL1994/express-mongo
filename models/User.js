@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    firstName: String,
-    lastName: String,
+    firstName: { type: String, default: "" },
+    lastName: { type: String, default: "" },
     email: String,
     username: {
       type: String,
@@ -16,6 +16,11 @@ const userSchema = new Schema(
       type: String,
       required: true,
       select: false // hide in response
+    },
+    isAdmin: {
+      type: Boolean,
+      select: false,
+      default: false
     }
   },
   {
@@ -29,7 +34,7 @@ const userSchema = new Schema(
 );
 
 userSchema.virtual("fullName").get(function() {
-  return this.firstName + " " + this.lastName;
+  return `${this.firstName || ""} ${this.lastName || ""}`.trim();
 });
 
 const User = mongoose.model("User", userSchema, "users");
