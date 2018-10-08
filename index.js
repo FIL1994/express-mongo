@@ -32,17 +32,17 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-app.post("/people/new", (req, res) => {
-  const person = new Person(req.body);
+app.post("/people", jwtCheck, (req, res) => {
+  const personData = new Person(req.body);
 
-  person.save(err => {
-    if (err) {
-      next(err);
-      return;
-    } else res.send(p);
-  });
+  const person = personData.save().catch(e => e);
 
-  res.send(person);
+  if (_.isError(person)) {
+    next(person);
+    return;
+  }
+
+  res.send(personData);
 });
 
 app.get("/people/first", (req, res, next) => {
