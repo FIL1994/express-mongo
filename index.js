@@ -10,7 +10,6 @@ const _ = require("lodash");
 
 const CircularJSON = require("circular-json");
 const chalk = require("chalk");
-const log = console.log;
 
 const { getUser, getUserID } = require("./helpers/getUser");
 const { Person } = require("./models/Person");
@@ -188,7 +187,7 @@ app.post("/login", async (req, res) => {
 });
 
 const server = app.listen(3000, () => {
-  log(
+  console.log(
     chalk.green(`Server running at http://localhost:${server.address().port}`)
   );
 });
