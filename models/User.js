@@ -9,13 +9,13 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      unique: [true, "That username is taken"]
     },
     password: {
       type: String,
       required: true,
-      select: false, // hide in response
-      unique: true
+      select: false // hide in response
     }
   },
   {

@@ -125,7 +125,7 @@ app.post("/post", jwtCheck, async (req, res, next) => {
   }).catch(e => e);
 
   if (_.isError(post)) {
-    next(post);
+    next(post.message);
     return;
   }
 
