@@ -12,30 +12,31 @@ const CircularJSON = require("circular-json");
 const chalk = require("chalk");
 const log = console.log;
 
+const { getUser, getUserID } = require("./helpers/getUser");
 const { Person } = require("./models/Person");
 const { User } = require("./models/User");
+const { Post } = require("./models/Post");
 
-const url = process.env.MONGO_URL;
-const jwtSecretKey = process.env.JWT_SECRET;
+const { MONGO_URL, JWT_SECRET } = process.env;
 
-mongoose.connect(url);
+mongoose.connect(MONGO_URL);
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
 const jwtCheck = expressjwt({
-  secret: jwtSecretKey
+  secret: JWT_SECRET
 });
 
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-app.post("/people", jwtCheck, (req, res) => {
+app.post("/people", jwtCheck, async (req, res) => {
   const personData = new Person(req.body);
 
-  const person = personData.save().catch(e => e);
+  const person = await personData.save().catch(e => e);
 
   if (_.isError(person)) {
     next(person);
@@ -110,6 +111,28 @@ app.delete("/users/:id", jwtCheck, (req, res, next) => {
   // User.findById(req.params.id).remove().exec();
 });
 
+app.post("/post", jwtCheck, async (req, res, next) => {
+  const userID = getUserID(req);
+  if (_.isError(userID)) {
+    next(userID);
+    return;
+  }
+
+  const postData = req.body;
+  const post = await Post.create({
+    author: userID,
+    ...postData
+  }).catch(e => e);
+
+  if (_.isError(post)) {
+    next(post);
+    return;
+  }
+
+  post.save();
+  res.send(post);
+});
+
 app.post("/signup", async (req, res, next) => {
   const userData = req.body;
 
@@ -139,10 +162,10 @@ app.post("/login", async (req, res) => {
   } else {
     const token = jwt.sign(
       {
-        sub: user.id,
+        id: user.id,
         user: user.username
       },
-      jwtSecretKey,
+      JWT_SECRET,
       {
         expiresIn: "3 hours"
       }
