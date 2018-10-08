@@ -12,7 +12,6 @@ const CircularJSON = require("circular-json");
 const chalk = require("chalk");
 
 const { getUser, getUserID } = require("./helpers/getUser");
-const { Person } = require("./models/Person");
 const { User } = require("./models/User");
 const { Post } = require("./models/Post");
 
@@ -30,54 +29,6 @@ const jwtCheck = expressjwt({
 
 app.get("/", (req, res) => {
   res.send("Hello!");
-});
-
-app.post("/people", jwtCheck, async (req, res) => {
-  const personData = new Person(req.body);
-
-  const person = await personData.save().catch(e => e);
-
-  if (_.isError(person)) {
-    next(person);
-    return;
-  }
-
-  res.send(personData);
-});
-
-app.get("/people/first", (req, res, next) => {
-  Person.find()
-    .select("firstName")
-    .exec((err, doc) => {
-      if (err) {
-        next(err);
-        return;
-      }
-
-      res.send(doc);
-    });
-});
-
-app.get("/people/:id", (req, res, next) => {
-  Person.findById(req.params.id, (err, doc) => {
-    if (err) {
-      next(err);
-      return;
-    }
-
-    res.send(doc);
-  });
-});
-
-app.get("/people", (req, res, next) => {
-  Person.find((err, doc) => {
-    if (err) {
-      next(err);
-      return;
-    }
-
-    res.send(doc);
-  });
 });
 
 app.get("/users", (req, res, next) => {
