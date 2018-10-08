@@ -111,7 +111,17 @@ app.delete("/users/:id", jwtCheck, (req, res, next) => {
   // User.findById(req.params.id).remove().exec();
 });
 
-app.post("/post", jwtCheck, async (req, res, next) => {
+app.get("/posts", jwtCheck, async (req, res, next) => {
+  const posts = await Post.find().catch(e => e);
+
+  if(_.isError(posts)) {
+    next(posts.message);
+  }
+
+  res.send(posts);
+});
+
+app.post("/posts", jwtCheck, async (req, res, next) => {
   const userID = getUserID(req);
   if (_.isError(userID)) {
     next(userID);
