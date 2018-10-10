@@ -48,7 +48,8 @@ router.post("/login", async (req, res) => {
     );
 
     res.status(200).send({
-      access_token: token
+      access_token: token,
+      user
     });
   }
 });
