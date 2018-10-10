@@ -8,9 +8,10 @@ const _ = require("lodash");
 const CircularJSON = require("circular-json");
 const chalk = require("chalk");
 
-const posts = require("./routes/posts");
-const users = require("./routes/users");
 const auth = require("./routes/auth");
+const users = require("./routes/users");
+const currentUser = require("./routes/currentUser");
+const posts = require("./routes/posts");
 
 const { MONGO_URL } = process.env;
 
@@ -22,8 +23,9 @@ app.use(cors());
 
 // routes
 app.use("/", auth);
-app.use("/posts", posts);
 app.use("/users", users);
+app.use("/current-user", currentUser);
+app.use("/posts", posts);
 
 app.get("/", (req, res) => {
   res.send("Hello!");
