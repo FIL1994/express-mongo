@@ -2,7 +2,7 @@ const express = require("express");
 const _ = require("lodash");
 const HttpStatus = require("http-status-codes");
 
-const jwtCheck = require("../helpers/jwtCheck");
+const jwtCheck = require("../middleware/jwtCheck");
 const { User } = require("../models/User");
 
 const router = express.Router();

@@ -2,12 +2,12 @@ const express = require("express");
 const _ = require("lodash");
 
 const { getUserID } = require("../helpers/getUser");
-const jwtCheck = require("../helpers/jwtCheck");
+const { jwtCheck, cacheControl } = require("../middleware");
 const { Post } = require("../models/Post");
 
 const router = express.Router();
 
-router.get("/", jwtCheck, async (req, res, next) => {
+router.get("/", jwtCheck, cacheControl(), async (req, res, next) => {
   const posts = await Post.find().catch(e => e);
 
   if (_.isError(posts)) {
