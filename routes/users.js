@@ -4,6 +4,7 @@ const HttpStatus = require("http-status-codes");
 
 const jwtCheck = require("../middleware/jwtCheck");
 const { User } = require("../models/User");
+const { getUser } = require("../helpers/getUser");
 
 const router = express.Router();
 
@@ -32,12 +33,29 @@ router.get("/:id", (req, res, next) => {
   });
 });
 
-router.delete("/:id", jwtCheck, (req, res, next) => {
-  res.status(HttpStatus.NOT_IMPLEMENTED).send({
-    error: HttpStatus.getStatusText(HttpStatus.NOT_IMPLEMENTED)
-  });
+router.delete("/:id", jwtCheck, async (req, res, next) => {
+  // res
+  //   .status(HttpStatus.NOT_IMPLEMENTED)
+  //   .json(HttpStatus.getStatusText(HttpStatus.NOT_IMPLEMENTED));
 
-  // User.findById(req.params.id).remove().exec();
+  const user = await getUser(req);
+
+  if (!user.isAdmin) {
+    res
+      .status(HttpStatus.FORBIDDEN)
+      .json(HttpStatus.getStatusText(HttpStatus.FORBIDDEN));
+    return;
+  }
+
+  try {
+    await User.findById(req.params.id)
+      .remove()
+      .exec();
+  } catch (err) {
+    next(err);
+    return;
+  }
+  res.send("deleted user");
 });
 
 module.exports = router;
