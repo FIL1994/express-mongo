@@ -8,7 +8,7 @@ const { Post } = require("../models/Post");
 const router = express.Router();
 
 router.get("/", jwtCheck, cacheControl(), async (req, res, next) => {
-  const posts = await Post.find().catch(e => e);
+  const posts = await Post.find().populate("author").catch(e => e);
 
   if (_.isError(posts)) {
     next(posts.message);
