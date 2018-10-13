@@ -12,6 +12,7 @@ const auth = require("./routes/auth");
 const users = require("./routes/users");
 const currentUser = require("./routes/currentUser");
 const posts = require("./routes/posts");
+const notes = require("./routes/notes");
 
 const { MONGO_URL } = process.env;
 
@@ -26,6 +27,7 @@ app.use("/", auth);
 app.use("/users", users);
 app.use("/current-user", currentUser);
 app.use("/posts", posts);
+app.use("/notes", notes);
 
 app.get("/", (req, res) => {
   res.send("Hello!");
