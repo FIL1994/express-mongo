@@ -16,7 +16,7 @@ const notes = require("./routes/notes");
 
 const { MONGO_URL } = process.env;
 
-mongoose.connect(MONGO_URL);
+mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
 const app = express();
 app.use(bodyParser.json());
